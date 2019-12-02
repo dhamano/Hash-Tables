@@ -32,7 +32,13 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+        hash_value = 33
+        key = str.encode(key)
+        
+        for char in key:
+            hash_value = ((hash_value << 5) + hash_value) + char
+        
+        return hash_value
 
 
     def _hash_mod(self, key):
@@ -40,7 +46,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
-        return self._hash(key) % self.capacity
+        # return self._hash(key) % self.capacity
+        return self._hash_djb2(key) % self.capacity
 
 
     def insert(self, key, value):
@@ -51,7 +58,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        self.storage[index] = value
 
 
 
@@ -63,7 +71,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        self.storage[index] = None
 
 
     def retrieve(self, key):
@@ -74,7 +83,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        return self.storage[index]
 
 
     def resize(self):
@@ -84,10 +94,35 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
 
+        for i in range(len(self.storage)):
+            new_storage[i] = self.storage[i]
 
+        self.storage = new_storage
 
+#"""
+ht = HashTable(3)
+ht.insert("hello",50)
+ht.insert("abacusMAX",2)
+ht.insert("world",50)
+ht.insert("people",2)
+
+print(ht.storage)
+
+ht.remove("abacusMAX")
+
+print(ht.storage)
+
+ht.resize()
+
+print(ht.storage)
+
+print(f'retrieve: {ht.retrieve("hello")}')
+
+#"""
+"""
 if __name__ == "__main__":
     ht = HashTable(2)
 
@@ -115,3 +150,4 @@ if __name__ == "__main__":
     print(ht.retrieve("line_3"))
 
     print("")
+#"""
